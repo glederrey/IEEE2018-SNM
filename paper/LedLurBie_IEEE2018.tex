@@ -1,0 +1,147 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+
+\usepackage{bbold}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+    
+\bibliographystyle{IEEEtran}
+\usepackage[show]{chato-notes}
+
+\newcommand{\E}[1]{\cdot10^{#1}}
+    
+\begin{document}
+
+\title{SNM: Stochastic Newton Method for optimization of Discrete Choice Models}
+
+\author{
+
+\IEEEauthorblockN{Gael Lederrey}
+\IEEEauthorblockA{\small \textit{Transport and Mobility Laboratory} \\
+\textit{\'Ecole Polytechnique F\'ed\'erale de Lausanne}\\
+Station 18, CH-1015 Lausanne \\
+\texttt{gael.lederrey@epfl.ch}}
+\and
+\IEEEauthorblockN{Virginie Lurkin}
+\IEEEauthorblockA{\small \textit{Transport and Mobility Laboratory} \\
+\textit{\'Ecole Polytechnique F\'ed\'erale de Lausanne}\\
+Station 18, CH-1015 Lausanne \\
+\texttt{virginie.lurkin@epfl.ch}}
+\and
+\IEEEauthorblockN{Michel Bierlaire}
+\IEEEauthorblockA{\small \textit{Transport and Mobility Laboratory} \\
+\textit{\'Ecole Polytechnique F\'ed\'erale de Lausanne}\\
+Station 18, CH-1015 Lausanne \\
+\texttt{michel.bierlaire@epfl.ch}}
+}
+
+\maketitle
+
+\begin{abstract}
+BLA BLA BLA
+\end{abstract}
+
+\begin{IEEEkeywords}
+Discrete Choice Models, Optimization
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+\cnote{
+\begin{itemize}
+\item Not a lot of work on optimization of DCMs
+\item ML are doing this a lot
+\item Expecting a lot more data. => Standard quasi Newton may have troubles
+\item Becomes interesting to search for new algorithms exploiting the structure of DCMs
+\end{itemize}
+}
+
+\section{Related Work}
+
+\cnote{
+\begin{itemize}
+\item ???
+\end{itemize}
+}
+
+\section{Methodology}
+
+In this section, we present the model used in this paper as well as some algorithms that have been tested.
+
+\subsection{Model}
+\cnote{
+\begin{itemize}
+\item Show the model. 
+\item Give results from biogeme.
+\item Describe algorithms.
+\end{itemize}
+}
+
+We use the {\it Swissmetro} dataset~\cite{bierlaire_acceptance_2001} and build a multinomial logit model denoted by $\mathcal{M}$:
+\begin{align}
+V_{\text{Car}} &= \text{ASC}_{\text{Car}} + \beta_{\text{TT,Car}} \text{TT}_{\text{Car}} + \beta_{\text{C,Car}} \text{C}_{\text{Car}} + \beta_{\text{Senior}}\mathbb{1}_{\text{Senior}} \nonumber \\
+\begin{split}
+V_{\text{SM}} &= \text{ASC}_{\text{SM}} + \beta_{\text{TT,SM}} \text{TT}_{\text{SM}} + \beta_{\text{C,SM}} \text{C}_{\text{SM}} \\
+& \quad + \beta_{\text{HE}} \text{HE}_{\text{SM}} + \beta_{\text{Senior}}\mathbb{1}_{\text{Senior}}
+\end{split} \\
+V_{\text{Train}} &= \text{ASC}_{\text{Train}} + \beta_{\text{TT,Train}} \text{TT}_{\text{Train}} + \beta_{\text{C,Train}} \text{C}_{\text{Train}} + \beta_{\text{HE}} \text{HE}_{\text{Train}} \nonumber
+\end{align}
+where $\mathbb{1}_{\text{Senior}}$ is a boolean variable equal to one if the age of the respondent is over 65 years olds, 0 otherwise, $C$ denotes the cost, $TT$ the travel time, and $HE$ the headway for the train and Swissmetro. On this model, we remove all observations with unknown choice, unkown age and non-positive travel time. This gives a total of 9,036 observations.\\
+ 
+This model is first estimated with Biogeme~\cite{bierlaire_biogeme:_2003} to obtain the optimal parameter values and verify that all parameters are significant. However, we do not use the usual log-likelihood. Instead, we are using a nomralized log-likelihood which simply corresponds to the log-likelihood divided by the number of observations. Therefore, the final normalized log-likelihood is $-0.7908$ and the parameters are given in Table \ref{tab:res_biogeme}.\\
+
+\begin{table}
+\centering
+\renewcommand\arraystretch{1.2}
+\begin{tabular}{l|cccc}
+{\bf Name} & {\bf Value} & {\bf Std err} & {\bf t-test} & {\bf p-value} \\ \hline
+$\text{ASC}_{\text{Car}}$ & 0 & - & - & - \\
+$\text{ASC}_{\text{SM}}$ & $7.86\E{-1}$ & $6.93\E{-2}$ & 11.35 & 0.00 \\
+$\text{ASC}_{\text{Train}}$ & $9.83\E{-1}$ & $1.31\E{-1}$ & 7.48 & 0.00 \\
+$\beta_{\text{TT,Car}}$ & $-1.05\E{-2}$ & $7.89\E{-4}$ & -8.32 & 0.00 \\
+$\beta_{\text{TT,SM}}$ & $-1.44\E{-2}$ & $6.36\E{-4}$ & -21.29 & 0.00 \\
+$\beta_{\text{TT,Train}}$ & $-1.80\E{-2}$ & $8.65\E{-4}$ & -20.78 & 0.00 \\
+$\beta_{\text{C,Car}}$ & $-6.56\E{-3}$ & $7.89\E{-4}$ & -8.32 & 0.00 \\
+$\beta_{\text{C,SM}}$ & $-8.00\E{-3}$ & $3.76\E{-4}$ & -21.29 & 0.00 \\
+$\beta_{\text{C,Train}}$ & $-1.46\E{-2}$ & $9.65\E{-4}$ & -15.09 & 0.00 \\
+$\beta_{\text{Senior}}$ & -1.06 & $1.16\E{-1}$ & -9.11 & 0.00 \\
+$\beta_{\text{HE}}$ & $-6.88\E{-3}$ & $1.03\E{-3}$ & -6.69 & 0.00
+\end{tabular}
+\caption{\label{tab:res_biogeme} Parameters of the optimized model $\mathcal{M}$ by Biogeme.}
+\end{table}
+
+We also provide a normalized model $\mathcal{M}_N$ where the values of travel time, cost and headway have been divided by 100. The parameters for this nomralized model are the same as model $\mathcal{M}$ except that the values of parameters associated to the features normalized are multiplied by 100. This is done such that all the parameters are in only one order of magnitude as opposed to the values in Table \ref{tab:res_biogeme} where the parameter values are in four orders of magnitude. \\
+
+\subsection{Algorithms}
+
+To train models $\mathcal{M}$ and $\mathcal{M}_N$, many different algorithms were used. These algorithms fall in three different categories: first-order methods, second-order methods and quasi-newton methods. As first-order methods, we use mini-batch SGD~\cite{ruder_overview_2016} and Adagrad~\cite{duchi_adaptive_2011}. For the quasi-newton methods, we use BFGS algorithm~\cite{fletcher_practical_1987} and RES-BFGS~\cite{mokhtari_res:_2014}, a regularized stochastic version of BFGS. The main second-order algorithm is the Newton method~\cite{caswell_treatise_1685}. In addition, we present in this paper a stochastic version of the Newton method simply denoted by Stochastic Newton Method (SNM), see Algorithm~\ref{algo:snm}. All these algorithms are run with a backtracking Line Search method using the Armijo-Goldstein condition~\cite{armijo_minimization_1966}.
+
+\section{Results}
+
+\cnote{
+In the results, I want to show that:
+\begin{itemize}
+\item First order methods do not work well. Especially when the model is not nomralized. 
+\item Second-order methods works well, even when the model is not normalized.
+\item Quasi Newton method works better than 1st order methods but worse than second order methods. 
+\end{itemize}
+}
+
+\section{Discussion}
+
+\section{Conclusion}
+
+\section{Acknowledgements} 
+
+\cnote{Thanks Tim!}
+
+\bibliography{PhD.bib}
+
+\end{document}
