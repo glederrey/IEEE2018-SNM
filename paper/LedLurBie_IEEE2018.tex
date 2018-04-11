@@ -3,11 +3,16 @@
 % The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
-\usepackage{algorithmic}
 \usepackage{graphicx}
 \usepackage{textcomp}
 
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
 \usepackage{bbold}
+
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
 
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
@@ -16,6 +21,9 @@
 \usepackage[show]{chato-notes}
 
 \newcommand{\E}[1]{\cdot10^{#1}}
+
+\let\oldReturn\Return
+\renewcommand{\Return}{\State\oldReturn}
     
 \begin{document}
 
@@ -73,16 +81,9 @@ Discrete Choice Models, Optimization
 
 \section{Methodology}
 
-In this section, we present the model used in this paper as well as some algorithms that have been tested.
+In this section, we present the model used in this paper, the algorithms being tested as well as the Stochastic Newton Method.
 
 \subsection{Model}
-\cnote{
-\begin{itemize}
-\item Show the model. 
-\item Give results from biogeme.
-\item Describe algorithms.
-\end{itemize}
-}
 
 We use the {\it Swissmetro} dataset~\cite{bierlaire_acceptance_2001} and build a multinomial logit model denoted by $\mathcal{M}$:
 \begin{align}
@@ -120,17 +121,122 @@ $\beta_{\text{HE}}$ & $-6.88\E{-3}$ & $1.03\E{-3}$ & -6.69 & 0.00
 We also provide a normalized model $\mathcal{M}_N$ where the values of travel time, cost and headway have been divided by 100. The parameters for this nomralized model are the same as model $\mathcal{M}$ except that the values of parameters associated to the features normalized are multiplied by 100. This is done such that all the parameters are in only one order of magnitude as opposed to the values in Table \ref{tab:res_biogeme} where the parameter values are in four orders of magnitude. \\
 
 \subsection{Algorithms}
+\label{sec:algorithms}
 
-To train models $\mathcal{M}$ and $\mathcal{M}_N$, many different algorithms were used. These algorithms fall in three different categories: first-order methods, second-order methods and quasi-newton methods. As first-order methods, we use mini-batch SGD~\cite{ruder_overview_2016} and Adagrad~\cite{duchi_adaptive_2011}. For the quasi-newton methods, we use BFGS algorithm~\cite{fletcher_practical_1987} and RES-BFGS~\cite{mokhtari_res:_2014}, a regularized stochastic version of BFGS. The main second-order algorithm is the Newton method~\cite{caswell_treatise_1685}. In addition, we present in this paper a stochastic version of the Newton method simply denoted by Stochastic Newton Method (SNM), see Algorithm~\ref{algo:snm}. All these algorithms are run with a backtracking Line Search method using the Armijo-Goldstein condition~\cite{armijo_minimization_1966}.
+To train models $\mathcal{M}$ and $\mathcal{M}_N$, many different algorithms were used. These algorithms fall in three different categories: first-order methods, second-order methods and quasi-newton methods. As first-order methods, we use mini-batch SGD~\cite{ruder_overview_2016} and Adagrad~\cite{duchi_adaptive_2011}. For the quasi-newton methods, we use BFGS algorithm~\cite{fletcher_practical_1987} and RES-BFGS~\cite{mokhtari_res:_2014}, a regularized stochastic version of BFGS. The main second-order algorithm is the Newton method~\cite{caswell_treatise_1685}. All the algorithms presented above are run with a backtracking Line Search method using the Armijo-Goldstein condition~\cite{armijo_minimization_1966} to avoid the long and tedious search of a good learning rate.
+
+\subsection{Stochastic Newton Algorithm}
+
+In this paper, we present an algorithm called Stochastic Newton Method. Within Neural Networks, the number of features $K$ can easily exceed one million \cnote{REFERENCE}. Thus, this is leading to extremely large Hessian since it will have $K^2$ elements. Discrete Choice Models, on the other hand, tend to have a reasonable number of features. Indeed, since the main purpose of Discrete Choice Models is explaining the behavioral aspect of the samples, the models cannot contain too many parameters \cnote{REFERENCE?}. Therefore, the main limitation of Newton methods encountered in Neural Networks is not valid for Discrete Choice models. Yet one problem still remains: the exponential growth of data. Indeed, computing the Hessian on many data can be as tedious as computing it for many features. Thus the need of a Stochastic Newton Method (SNM).
+
+The main point of this algorithm is to compute a stochastic Hessian. We show here that computing a stochastic Hessian is possible for a Logit Model. The generalization can be applied to any finite-sum function as the log-likelihood of a Logit Model. Let $N$ denote the number of samples, $\mathcal{C}$ denote the choice set and $\mathcal{C}_n$ denote the choice set available for observation $n$ and define
+\[
+y_{in} = 
+\begin{cases}
+1 & \text{if observation $n$ chose alternative $i$}, \\
+0 & \text{otherwise}.
+\end{cases}
+\]
+The likelihood function for a choice model is given by
+\begin{equation}
+\mathcal{L}^* = \prod_{n=1}^N \prod_{i\in\mathcal{C}_n} P_n(i)^{y_{in}}
+\end{equation}
+where $P_n(i)$ denotes the probability that observation $n$ choses alternative $i$. For a Logit model, we can define this probability as
+\begin{equation}
+\label{eq:proba}
+P_n(i) = \frac{e^{V_{in}}}{\sum_{j\in\mathcal{C}_n e^{V_{jn}}}}
+\end{equation}
+where $V_{in}$ denotes the utility of alternative $i$ for observation $n$. If we take the logarithm of equation \ref{eq:proba}, we get the log-likelihood:
+\begin{align}
+\label{eq:log-likelihood}
+\mathcal{L} &= \sum_{n=1}^N\sum_{i\in\mathcal{C}_n} y_{in}\left( V_{in} - \ln \sum_{j\in\mathcal{C}_n}e^{V_{jn}} \right) \nonumber \\
+&= \sum_{n=1}^N \left( \sum_{i\in\mathcal{C}_n} y_{in}V_{in} - \ln \sum_{j\in\mathcal{C}_n}e^{V_{jn}} \right) 
+\end{align}
+The second equality is done using the fact that $\sum_{i\in\mathcal{C}_n} y_{in} = 1$. We then update the log-likehood of equation \ref{eq:log-likelihood} to create a normalized log-likelihood.
+\begin{equation}
+\label{eq:norm_ll}
+\bar{\mathcal{L}} = \frac{1}{N}\mathcal{L} = \frac{1}{N} \sum_{n=1}^N \left( \sum_{i\in\mathcal{C}_n} y_{in}V_{in} - \ln \sum_{j\in\mathcal{C}_n}e^{V_{jn}} \right)
+\end{equation}
+This is done such that the value of the log-likelihood stay in the same magnitude of order for any subset of observations $\mathcal{I}$. Indeed, if we denote $\mathcal{L}_{\mathcal{I}}$ as the log-likelihood computed on the observation from $\mathcal{I}$ and $\mathcal{N}$ the set of all observations, we see that
+\begin{align}
+\label{eq:comp_ll}
+\mathcal{L}_{\mathcal{I}} &=  \sum_{n\in \mathcal{I}} \left( \sum_{i\in\mathcal{C}_n} y_{in}V_{in} - \ln \sum_{j\in\mathcal{C}_n}e^{V_{jn}} \right) \nonumber \\
+&< \sum_{n\in \mathcal{I}} \left( \sum_{i\in\mathcal{C}_n} y_{in}V_{in} - \ln \sum_{j\in\mathcal{C}_n}e^{V_{jn}} \right) \nonumber \\ &\quad + \sum_{n \in \mathcal{N} \smallsetminus \mathcal{I}} \left( \sum_{i\in\mathcal{C}_n} y_{in}V_{in} - \ln \sum_{j\in\mathcal{C}_n}e^{V_{jn}} \right) \nonumber \\
+&= \mathcal{L}
+\end{align}
+As shown in equation \ref{eq:comp_ll}, the standard log-likelihood cannot be compared on different set of data if they do not have the same number of data. Therefore, it can be shown that normalizing this log-likelihood as done in equation \ref{eq:norm_ll} produces log-likelihood of same order of magnitude independently of the number of observations.\\
+
+The first derivatives of $\bar{\mathcal{L}}$ with respect to the coefficient for $k=1,\ldots,K$ are given by
+\begin{align}
+\frac{\partial \bar{\mathcal{L}}}{\partial \beta_k} &= \frac{1}{N} \sum_{n=1}^N \left(\sum_{i\in\mathcal{C}_n} y_{in}\frac{\partial V_{in}}{\partial \beta_k} - \sum_{i\in\mathcal{C}_n}1 P_n(i) \frac{\partial V_{in}}{\partial \beta_k}\right) \nonumber \\
+&= \frac{1}{N}\sum_{n=1}^N \sum_{i\in\mathcal{C}_n} \left(y_{in} - P_n(i)\right) \frac{\partial V_{in}}{\partial \beta_k} 
+\end{align}
+The second derivatives for $k=1,\ldots,K$ and $l=1,\ldots,K$ are given by
+\begin{equation}
+\label{eq:second_deriv}
+\frac{\partial^2 \bar{L}}{\partial \beta_k \partial \beta_l} = - \frac{1}{N}\sum_{n=1}^N \sum_{i\in\mathcal{C}_n} P_n(i) W_{ink} W_{inl}
+\end{equation}
+where 
+\[
+W_{ink} = \left(\frac{\partial V_{in}}{\partial \beta_k} - \sum_{j\in\mathcal{C}_n} \frac{\partial V_{jn}}{\partial \beta_k}P_n(j)\right)
+\]
+
+From the definition of the second derivatives in equation \ref{eq:second_deriv}, it is easy to compute the second derivative for only one observation $m$.
+\begin{equation}
+\label{eq:second_deriv_1}
+\left.\frac{\partial^2 \bar{L}}{\partial \beta_k \partial \beta_l}\right|_{m} = - \sum_{i\in\mathcal{C}_m} P_m(i) W_{imk} W_{iml}
+\end{equation}
+
+\begin{algorithm*}[t]
+\caption{Stochastic Newton Method}\label{algo:snm}
+\begin{algorithmic}[1]
+\Require{Starting parameter value ($\theta_0$), data ($\mathcal{D}$), function ($f$), gradient ($\nabla f$), Hessian ($\nabla^2 f$), number of epochs ($n_{ep}$), batch size ($n_{batch}$)}
+\Ensure{Epochs ($e$), parameters ($\theta$), function values ($f_v$)}
+\Function{SNM}{}
+\State $(n_{\mathcal{D}}, m) = |\mathcal{D}|$ \Comment{Number of samples and parameters}
+\State $n_{iter} \gets \lceil n_{ep}n_{\mathcal{D}}/n_{batch} \rceil$ \Comment{Number of iterations}
+\State Initialize $e$, $\theta$ and $f_v$. Set $\theta[0] \gets \theta_{0}$
+\For {$i = 0 \ldots n_{iter}$}
+\State $e[i] \gets i\cdot n_{batch} /n_{\mathcal{D}}$ \Comment{Store the epoch}
+\State $f_{v}[i] \gets f(\theta[i])$ \Comment{Store the function value}
+\State \texttt{idx} $\gets n_{batch} $ values from $\mathcal{U}(0, n_{\mathcal{D}})$ without replacement
+\State \texttt{grad} $\gets \nabla f_{\texttt{idx}}(\theta[i])$ \Comment{Gradient on the samples from \texttt{idx}}
+\State \texttt{hess} $\gets \nabla^2 f_{\texttt{idx}}(\theta[i])$ \Comment{Hessian on the samples from \texttt{idx}}
+\If {\texttt{hess} is non singular}
+\State \texttt{inv\_hess} $\gets \texttt{hess}^{-1}$
+\State \texttt{step} $\gets -\texttt{grad} \cdot \texttt{inv\_hess}$
+\Else 
+\State \texttt{step} $\gets \texttt{grad}$
+\EndIf
+\State $\alpha \gets $ Backtracking Line Search with \texttt{step} on the subset of data  with indices from \texttt{idx}
+\State $\theta[i+1] \gets \theta[i] + \alpha \cdot \texttt{step}$
+\EndFor
+\State $e[n_{iter}] \gets n_{iter}\cdot n_{batch} /n_{\mathcal{D}}$
+\State $f_{v}[n_{iter}] \gets f(\theta[n_{iter}])$
+
+\Return $e$, $\theta$ and $f_v$
+\EndFunction
+\end{algorithmic}
+\end{algorithm*}
+
+From the definitions in equations \ref{eq:second_deriv} and \ref{eq:second_deriv_1}, we can conclude that the Hessian on a subset of the observations $\mathcal{I}$ is the average of the Hessians for each of observation $i\in\mathcal{I}$. \\
+
+We present now the Stochastic Newton Method (SNM), see Algorithm~\ref{algo:snm}. The computation of both the stochastic gradient and the stochastic Hessian are done on lines 9 and 10. Another contribution is done while computing the direction for the next step. Indeed, with small batches, the Hessian may be singular. For example, it is possible that a parameter was not present with a chosen alternative. Therefore, the row and column of the Hessian will both be zero for this particular parameter, thus making it singular. The countermeasure to this possibility is to test if the Hessian is singular or not. If it is not the case, then the algorithm performs a standard Newton step with the stochastic Hessian and gradient. However, if the Hessian is singular, the algorithm performs a Stochastic Gradient Descent (SGD) step. Concerning the choice of the learning rate, for a given objective function, it often differs between SGD and Newton Method. Therefore, the algorithm should either receive two different learning rate or we can perform a line search, as explained at the end of Section \ref{sec:algorithms}. 
+
+%
+
+%In addition, we present in this paper a stochastic version of the Newton method simply denoted by Stochastic Newton Method (SNM), see Algorithm~\ref{algo:snm}. The termination criterion is not given in this algorithm as they are different ways to execute this criterion. The main contribution from this algorithm appears on lines 11 to 15 where the step differs according to the singularity on the Hessian. Indeed, it is possible that with small batches, the hessian becomes singular. It can be due to parameters that are taken into account in the batch or just a lack of data. Therefore, the replacement for this step is a simple gradient step. As the choice of learning rate may be different between a gradient step or a newton step, using a line search get rids of this problem.
+
 
 \section{Results}
 
 \cnote{
-In the results, I want to show that:
 \begin{itemize}
-\item First order methods do not work well. Especially when the model is not nomralized. 
-\item Second-order methods works well, even when the model is not normalized.
-\item Quasi Newton method works better than 1st order methods but worse than second order methods. 
+\item First order methods on normalized vs unormalized data
+\item First order methods depending on batch size
+\item Quasi Newton methods depending on batch size
+\item Second order methods depending on batch size
+\item Percentage of grad vs newton step
 \end{itemize}
 }
 
