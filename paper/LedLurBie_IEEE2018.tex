@@ -28,10 +28,12 @@
 
 \let\oldReturn\Return
 \renewcommand{\Return}{\State\oldReturn}
+
+\renewcommand{\citedash}{--} 
     
 \begin{document}
 
-\title{SNM: Stochastic Newton Method for optimization of Discrete Choice Models}
+\title{SNM: Stochastic Newton Method for Optimization of Discrete Choice Models}
 
 \author{
 
@@ -57,7 +59,9 @@ Station 18, CH-1015 Lausanne \\
 \maketitle
 
 \begin{abstract}
-BLA BLA BLA
+Discrete Choice Models' software often used standard optimization algorithms. However, with the advent of Big Data, these algorithms will soon become a drawback for training such models. The field of Machine Learning has seen the emergence of many powerful first-order methods. Yet, they do not make use of second-order methods often due to the difficulty of computing the Hessian when having a massive amount of features. Discrete Choice Models are often much smaller than Machine Learning models. Therefore, it is possible to use second-order methods for optimizing such models. 
+
+In this article, we present a Stochastic Newton Method (SNM) for training Multinomial Logit models. We benchmarked this algorithm against standard first-order methods and quasi-newton methods. Also, we highlight one problem when using stochastic methods and propose a future fix for SNM.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -67,26 +71,20 @@ Discrete Choice Models, Optimization
 \section{Introduction}
 \label{sec:intro}
 
-\cnote{
-\begin{itemize}
-\item Not a lot of work on optimization of DCMs
-\item ML are doing this a lot
-\item Expecting a lot more data. $\Rightarrow$ Standard quasi Newton may have troubles
-\item Becomes interesting to search for new algorithms exploiting the structure of DCMs $\Rightarrow$ Show structure DCM with obs, draws and panel.
-\end{itemize}
-}
+In the ``optimization world'', there are three main categories of iterative algorithms: first-order methods, quasi-newton methods, and second-order methods. Of course, many other types of algorithms for optimizing objective function in a constrained or unconstrained environment. However, recently much work has been done on iterative optimization algorithms, see Section~\ref{sec:rel_work}, thanks to the Machine Learning community. Indeed, with the advent of Machine Learning since the last twenty years, many researchers have been working on new ways to optimize models. Even if computers have become more powerful years after years, Machine Learning models have become more and more complex. We often see Deep learning models with more than a million features. Thus, optimization's research for Machine Learning focusses on first-order methods. Indeed, computing the Hessian is quite tedious with a massive number of features. \\
+
+Currently, most of the Discrete Choice models' packages, such as Larch~\cite{newman_larch:_2016} or Biogeme~\cite{bierlaire_biogeme:_2003}, make use of standard optimization algorithms. Within the era of Big Data, we want to use more and more data to get more accurate models. However, most of those standard algorithms will struggle with huge datasets. Therefore, the good practice coming from Machine Learning is to use stochastic algorithms. Stochastic first-order methods are known to be very efficient. However, they have some drawback such as the loss of information on the curvature of the function, contain in the Hessian. For odd objective function, this information is sometimes required. Therefore, thanks to the reasonable size of Discrete Choice models, we argue that it is possible to use Second-order stochastic methods for training Discrete Choice models and that it outperforms the standard first-order methods and quasi-newton methods. 
+
+%In this article, we first present some related work. Then, we describe the multinomial logit model used in our experiments as well as a novel second-order stochastic algorithm: Stochastic Newton Method (SNM). Then, we show that usual first-order methods struggles on optimizing Multinomial Logit model. Finally, we show that SNM outperforms standards first-order methods and quasi-newton methods. We also give one small weakness of this algorithm with a way to fix it in the future.
 
 \section{Related Work}
 \label{sec:rel_work}
 
-\cnote{
-\begin{itemize}
-\item Lot of research has been done on first-order
-\item Some recent research on stochastic Hessian-free optimization
-\item Very few research on stochastic Newton method  
-\end{itemize}
-}
+As stated earlier, optimization algorithms play an important role in Machine Learning. Indeed, if we want to use complex models, we need to use powerful optimization methods. First-order methods have been studied a lot, and many variants of the standard Stochastic Gradient Descent (SGD) exists. It is well known that standard first-order methods tend to struggle when the curvature of the objective function is not homogeneous~\cite{sutton_two_1986}. Therefore, Quian describes a method using momentum to help the gradient in these particular situations~\cite{qian_momentum_1999}. Other first-order methods adapt the step size to the parameters, such as Adagrad~\cite{duchi_adaptive_2011}. Then, there is an iterative process between researchers trying to improve previous algorithms. Ruder~\cite{ruder_overview_2016} gives a good overview of first-order methods, from SGD up to complex and recent first-order algorithms such as Nadam~\cite{dozat_incorporating_2016} or AMSGrad~\cite{reddi_convergence_2018}. \\
 
+More recently, with the help of more powerful computers, researchers have been looking at quasi-newton methods. Indeed, such method may be beneficial when first-order methods are struggling due to the lack of information from the curvature. The idea behind quasi-newton methods is to use the gradient to approximate the Hessian iteratively. BFGS algorithm~\cite{fletcher_practical_1987} is a standard quasi-newton method. Stochastic BFGS algorithms such as RES-BFGS~\cite{mokhtari_res:_2014}, a regularized stochastic BFGS, are used nowadays. Many researchers are trying to make use of the structure of the problem to find alternative versions of a given algorithm to perform better on this specific problem. For example, Gower {\it et al.}~\cite{gower_accelerated_2018} have implemented an alternative version of BFGS for Matrix Inversion. Keskar {\it et al.}~\cite{keskar_adaqn:_2016} have implemented adaQN, an adaptative quasi-newton method specifically designed for training Recurrent Neural Networks. Some researchers, such as Ye and Zhang~\cite{ye_nestrovs_2017}, are inspired by the progress on first-order methods to improve second-order methods. We also see some algorithms making use of Conjugate Gradient and stochasticity to create better algorithms as done by Byrd {\it et al.}~\cite{byrd_use_2011}. In the end, the most advanced and recent methods make use of quasi-newton methods, see~\cite{kiros_training_2013,bordes_sgd-qn:_2009,bordes_erratum:_2010,agarwal_second-order_2016}. However, very little work on second-order method, making use of the analytical Hessian, can be found in the literature.
+
+\vspace{-0.2cm}
 \section{Methodology}
 \label{sec:methodo}
 
@@ -127,15 +125,16 @@ $\beta_{\text{Senior}}$ & -1.06 & $1.16\E{-1}$ & -9.11 & 0.00 \\
 $\beta_{\text{HE}}$ & $-6.88\E{-3}$ & $1.03\E{-3}$ & -6.69 & 0.00
 \end{tabular}
 \caption{\label{tab:res_biogeme} Parameters of the optimized model $\mathcal{M}$ by Biogeme.}
-\vspace{-0.5cm}
+\vspace{-0.8cm}
 \end{table}
 
 We also provide a normalized model $\bar{\mathcal{M}}$ where the values of travel time, cost, and headway have been divided by 100. The parameters for this normalized model are the same as model $\mathcal{M}$ except that the values of parameters associated to the features normalized are multiplied by 100. The reason behind this normalization is to have parameters close to each other, {\it i.e.} in the same order of magnitude, as opposed to the values in Table \ref{tab:res_biogeme} where the parameter values are in four orders of magnitude. \\
 
-\subsection{Stochastic Newton Algorithm}
+\vspace{-0.3cm}
+\subsection{Stochastic Newton Algorithm (SNM)}
 \label{sec:snm}
 
-In this article, we present an algorithm called Stochastic Newton Method. Within Neural Networks, the number of features $K$ can easily exceed one million \cnote{REFERENCE}. Thus, this is leading to huge Hessian since it will have $K^2$ elements. Discrete Choice Models, on the other hand, tend to have a reasonable number of features. Indeed, since the primary purpose of Discrete Choice Models is explaining the behavioral aspect of the samples, the models cannot contain too many parameters \cnote{REFERENCE?}. Therefore, the primary limitation of Newton methods encountered in Neural Networks is not valid for Discrete Choice models. Yet, one problem remains: the exponential growth of data. Indeed, computing the Hessian on many data can be as tedious as computing it for many features. Thus the need for a Stochastic Newton Method (SNM).
+In this article, we present an algorithm called Stochastic Newton Method. Within Neural Networks, the number of features $K$ can easily exceed one million. Thus, this is leading to huge Hessian since it will have $K^2$ elements. Discrete Choice Models, on the other hand, tend to have a reasonable number of features. Indeed, since the primary purpose of Discrete Choice Models is explaining the behavioral aspect of the samples, the models cannot contain too many parameters. Therefore, the primary limitation of Newton methods encountered in Neural Networks is not valid for Discrete Choice models. Yet, one problem remains: the exponential growth of data. Indeed, computing the Hessian on many data can be as tedious as computing it for many features. Thus the need for a Stochastic Newton Method (SNM).
 
 The main point of this algorithm is to compute a stochastic Hessian. We show here that computing a stochastic Hessian is possible for a Logit Model. The generalization can be applied to any finite-sum function as such as the log-likelihood of a Logit Model. Let $N$ denote the number of samples, $\mathcal{C}$ denote the choice set and $\mathcal{C}_n$ denote the choice set available for observation $n$ and define
 \[
@@ -168,9 +167,11 @@ The second equality is done using the fact that $\sum_{i\in\mathcal{C}_n} y_{in}
 This is done such that the value of the log-likelihood stay in the same magnitude of order for any subset of observations $\mathcal{I}$. Indeed, if we denote $\mathcal{L}_{\mathcal{I}}$ as the log-likelihood computed on the observation from $\mathcal{I}$ and $\mathcal{N}$ the set of all observations, we see that
 \begin{align}
 \label{eq:comp_ll}
-\mathcal{L}_{\mathcal{I}} &=  \sum_{n\in \mathcal{I}} \left( \sum_{i\in\mathcal{C}_n} y_{in}V_{in} - \ln \sum_{j\in\mathcal{C}_n}e^{V_{jn}} \right) \nonumber \\
-&< \sum_{n\in \mathcal{I}} \left( \sum_{i\in\mathcal{C}_n} y_{in}V_{in} - \ln \sum_{j\in\mathcal{C}_n}e^{V_{jn}} \right) \nonumber \\ &\quad + \sum_{n \in \mathcal{N} \smallsetminus \mathcal{I}} \left( \sum_{i\in\mathcal{C}_n} y_{in}V_{in} - \ln \sum_{j\in\mathcal{C}_n}e^{V_{jn}} \right) \nonumber \\
+\begin{split}
+\mathcal{L}_{\mathcal{I}} &=  \sum_{n\in \mathcal{I}} \left( \sum_{i\in\mathcal{C}_n} y_{in}V_{in} - \ln \sum_{j\in\mathcal{C}_n}e^{V_{jn}} \right)  \\
+&< \sum_{n\in \mathcal{I}} \left( \sum_{i\in\mathcal{C}_n} y_{in}V_{in} - \ln \sum_{j\in\mathcal{C}_n}e^{V_{jn}} \right) \\ &\quad + \sum_{n \in \mathcal{N} \smallsetminus \mathcal{I}} \left( \sum_{i\in\mathcal{C}_n} y_{in}V_{in} - \ln \sum_{j\in\mathcal{C}_n}e^{V_{jn}} \right) \\
 &= \mathcal{L}
+\end{split}
 \end{align}
 As shown in Equation (\ref{eq:comp_ll}), the standard log-likelihood cannot be compared on different set of data if they do not have the same number of data. Therefore, it can be shown that normalizing this log-likelihood as done in Equation (\ref{eq:norm_ll}) produces log-likelihood of same order of magnitude independently of the number of observations.\\
 
@@ -196,7 +197,7 @@ From the definition of the second derivatives in Equation (\ref{eq:second_deriv}
 \end{equation}
 
 \begin{algorithm*}[t]
-\caption{Stochastic Newton Method}\label{algo:snm}
+\caption{Stochastic Newton Method (SNM)}\label{algo:snm}
 \begin{algorithmic}[1]
 \Require{Starting parameter value ($\theta_0$), data ($\mathcal{D}$), function ($f$), gradient ($\nabla f$), Hessian ($\nabla^2 f$), number of epochs ($n_{ep}$), batch size ($n_{batch}$)}
 \Ensure{Epochs ($e$), parameters ($\theta$), function values ($f_v$)}
@@ -277,7 +278,7 @@ on $\bar{\mathcal{M}}$ & -0.801739 & -0.801646
 rel. diff.  & 1.42\% & 1.30\% & 0.00\%
 \end{tabular}
 \caption{\label{tab:res_norm_unorm} Average normalized log-likelihood over a thousand runs at the second epoch for SGD, Adagrad and SNM.}
-\vspace{-0.5cm}
+\vspace{-0.9cm}
 \end{table}
 
 Figure \ref{fig:snm_norm_unorm} shows the results of the training on both models with SNM. We ran this algorithm with batches of 1,000 observations. In Sections \ref{sec:comp_algo} and \ref{sec:effect_bs}, we explain why we had to use a batch size with more observations. The qualitative results as well as the quantitative results in Table \ref{tab:res_norm_unorm} show that second-order methods have less problem with badly conditioned optimization problem. Thus, it indicates that the information contained in the Hessian is important when the problem is ill-conditioned.
@@ -316,7 +317,7 @@ In this section, we want to compare the three main categories of algorithms: fir
 \multicolumn{2}{l|}{\bf Full batch size}  & -0.891737 & -0.963458/-0.806245 & -0.798112
 \end{tabular}
 \caption{\label{tab:comparison_algo} Average normalized log-likelihood over a thousand runs at the second epoch for first-order methods, quasi-newton methods and second-order methods.}
-\vspace{-0.5cm}
+\vspace{-0.8cm}
 \end{table}
 
 From Figure~\ref{fig:comparison_algo}, we already see that first-order methods are the furthest from the optimal value. Then, we see that stochastic quasi-newton methods tend to struggle to reach the optimal value, especially with the first approximation of the Hessian being an identity matrix. Interestingly, we see that the RES-BFGS works better with smaller batch size while it tends to struggle and plateau with big batch size. Nevertheless, it can get closer to the optimal solution than SGD. However, SNM is the best algorithm out of the three. Table \ref{tab:comparison_algo} gives the average value of the normalized log-likelihood for the second epoch. In this table, we reported two values for the quasi-newton method and the full batch size: the first value reported is with the first approximation of the Hessian being an identity matrix, the second value corresponds to the real hessian. The numbers confirm that SNM is the best algorithm. However, it is interesting to note that contrary to the other two algorithms, SNM runs better with bigger batch size. In the next section, see Section~\ref{sec:effect_bs}, we study the reason behind this behavior.
@@ -335,9 +336,9 @@ As shown in Figure~\ref{fig:comparison_algo}, SNM is the only algorithm for whic
 \vspace{-0.3cm}
 \end{figure}
 
-The algorithm is only capable of performing a Newton step if the hessian matrix is non-singular. If we take a look at model $\mathcal{M}$, Equation~\ref{eq:model}, we see that we have one binary variable: $\mathbb{1}_{Senior}$. On our 9,036 observations, 8,406 observations have a 0 value for $\mathbb{1}_{Senior}$. In the particular case where all observations from a given batch have a 0 for $\mathbb{1}_{Senior}$, the hessian will be singular. However, as shown in Figure~\ref{fig:perc_newton}, this percentage goes quickly to 100\%. With a batch size of 100 observations, the algorithm will perform a Newton step 99.86\% of the time. Thus, we see that having binary variables that are often equal to 0 is not a problem for the algorithm. \\
+The algorithm is only capable of performing a Newton step if the Hessian is non-singular. If we take a look at model $\mathcal{M}$, Equation~\ref{eq:model}, we see that we have one binary variable: $\mathbb{1}_{Senior}$. On our 9,036 observations, 8,406 observations have a 0 value for $\mathbb{1}_{Senior}$. In the particular case where all observations from a given batch have a 0 for $\mathbb{1}_{Senior}$, the hessian will be singular. However, as shown in Figure~\ref{fig:perc_newton}, this percentage goes quickly to 100\%. With a batch size of 100 observations, the algorithm will perform a Newton step 99.86\% of the time. Thus, we see that having binary variables that are often equal to 0 is not a problem for the algorithm. \\
 
-However, small batch sizes creates other problems. Indeed, when computing the Hessian with small batch size, the only information we get is from a small subset of the data. Therefore, for a given batch, the optimum can be different from the optimum on the whole dataset. Using the well optimized function \texttt{minimize} from the package \texttt{scipy.optimize}, we compute the optimum for different batch size. Then, we compare the euclidian distance between the optimum on the full dataset and the optimum from the different batches. Figure \ref{fig:batch_dist} shows the results of this experiment.
+However, small batch sizes create other problems. Indeed, when computing the Hessian with small batch size, the only information we get is from a small subset of the data. Therefore, for a given batch, the optimum can be different from the optimum on the whole dataset. Using the well optimized function \texttt{minimize} from the package \texttt{scipy.optimize}, we compute the optimum for different batch size. Then, we compare the euclidian distance between the optimum on the full dataset and the optimum from the different batches. Figure \ref{fig:batch_dist} shows the results of this experiment.
 
 \begin{figure}[t]
 \centering
@@ -345,10 +346,10 @@ However, small batch sizes creates other problems. Indeed, when computing the He
 \vspace{-0.3cm}
 \caption{Euclidian distance between the optimal parameters obtained on the full dataset and optimal parameters found on batches of the data for different batch sizes. The line in the middle represents the median. A thousand draws were coomputed for each batch size.}
 \label{fig:batch_dist}
-\vspace{-0.3cm}
+\vspace{-0.5cm}
 \end{figure}
 
-In Figure~\ref{fig:batch_dist}, we clearly see that when taking small batches, the optimal solution is pretty far from the optimal solution on all data point. Therefore, this creates a problem in the computation of the step for SNM. Indeed, since we do not take into account previous Hessian, as opposed to RES-BFGS, the algorithm will often change direction with small batches. Indeed, everytime we change the batch, the algorithm is chasing a different optimum. Thus, it makes it difficult for it to achieve the real optimum. One way to fix this problem is to keep the information about previous Hessian and use these information to correct the direction of the algorithm.
+In Figure~\ref{fig:batch_dist}, we see that when taking small batches, the optimal solution is pretty far from the optimal solution on all data point. Therefore, this creates a problem in the computation of the step for SNM. Indeed, since we do not take into account previous Hessian, as opposed to RES-BFGS, the algorithm will often change direction with small batches. Indeed, every time we change the batch, the algorithm is chasing a different optimum. Thus, it makes it difficult for it to achieve the real optimum. One way to fix this problem is to keep the information about previous Hessian and use this information to correct the direction of the algorithm.
 
 \section{Conclusion}
 \label{sec:conclusion}
