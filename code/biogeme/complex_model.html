@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+<script src="http://transp-or.epfl.ch/biogeme/sorttable.js"></script>
+<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+<title>complex_model.html - Report from biogeme 2.6a [Mon 27 Nov 11:09:14 CET 2017]</title>
+<meta name="keywords" content="biogeme, discrete choice, random utility">
+<meta name="description" content="Report from biogeme 2.6a [Mon 27 Nov 11:09:14 CET 2017]">
+<meta name="author" content="Michel Bierlaire">
+<style type=text/css>
+<!--table
+.biostyle
+	{font-size:10.0pt;
+	font-weight:400;
+	font-style:normal;
+	font-family:Courier;}
+.boundstyle
+	{font-size:10.0pt;
+	font-weight:400;
+	font-style:normal;
+	font-family:Courier;
+        color:red}
+-->
+</style>
+</head>
+
+<body bgcolor="#ffffff">
+<p>biogeme 2.6a [Mon 27 Nov 11:09:14 CET 2017]</p>
+<p>Home page: <a href='http://biogeme.epfl.ch' target='_blank'>http://biogeme.epfl.ch</a></p>
+<p>Submit questions to <a href='https://groups.google.com/d/forum/biogeme' target='_blank'>https://groups.google.com/d/forum/biogeme</a></p>
+<p><a href='http://people.epfl.ch/michel.bierlaire'>Michel Bierlaire</a>, <a href='http://transp-or.epfl.ch'>Transport and Mobility Laboratory</a>, <a href='http://www.epfl.ch'>Ecole Polytechnique F&eacute;d&eacute;rale de Lausanne (EPFL)</a></p>
+<p>This file has automatically been generated on
+Sun Apr 15 16:24:47 2018</p>
+<p>If you drag this HTML file into the Calc application of <a href='http://www.openoffice.org/' target='_blank'>OpenOffice</a>, or the spreadsheet of <a href='https://www.libreoffice.org/' target='_blank'>LibreOffice</a>, you will be able to perform additional calculations.</p><table><tr class=biostyle><td align=right><strong>Report file</strong>:	</td><td>complex_model.html</td></tr><tr class=biostyle><td align=right><strong>Sample file</strong>:	</td><td>../../data/GEV_SM/swissmetro.dat</td></tr></table><h1>Formulas</h1>
+<table border="0">
+<tr class=biostyle><td align=right><strong><em>Car:</em></strong>	</td><td><em>ASC_CAR * one + BETA_CAR_TT * CAR_TT + BETA_CAR_CO * CAR_CO + BETA_SENIOR * SENIOR</em></td></tr><tr class=biostyle><td align=right><strong><em>SwissMetro:</em></strong>	</td><td><em>ASC_SM * one + BETA_SM_TT * SM_TT + BETA_SM_CO * SM_COST + BETA_HE * SM_HE + BETA_SENIOR * SENIOR</em></td></tr><tr class=biostyle><td align=right><strong><em>Train:</em></strong>	</td><td><em>ASC_TRAIN * one + BETA_TRAIN_TT * TRAIN_TT + BETA_TRAIN_CO * TRAIN_COST + BETA_HE * TRAIN_HE</em></td></tr></table>
+<h1>Statistics</h1>
+<table border="0">
+<tr class=biostyle><td align=right><strong><em>Alt. 1 available:</em></strong>	</td><td><em>9036</em></td></tr><tr class=biostyle><td align=right><strong><em>Alt. 1 chosen:</em></strong>	</td><td><em>779</em></td></tr><tr class=biostyle><td align=right><strong><em>Alt. 2 available:</em></strong>	</td><td><em>9036</em></td></tr><tr class=biostyle><td align=right><strong><em>Alt. 2 chosen:</em></strong>	</td><td><em>5177</em></td></tr><tr class=biostyle><td align=right><strong><em>Alt. 3 available:</em></strong>	</td><td><em>9036</em></td></tr><tr class=biostyle><td align=right><strong><em>Alt. 3 chosen:</em></strong>	</td><td><em>3080</em></td></tr><tr class=biostyle><td align=right><strong><em>Cte loglikelihood (only for full choice sets):</em></strong>	</td><td><em>-8107.8</em></td></tr><tr class=biostyle><td align=right><strong><em>Null loglikelihood:</em></strong>	</td><td><em>-9927.06</em></td></tr></table>
+<h1>Estimation report</h1>
+
+<table border="0">
+<tr class=biostyle><td align=right ><strong>Number of estimated parameters</strong>: </td> <td>10</td></tr>
+<tr class=biostyle><td align=right ><strong>Sample size</strong>:</td> <td>9036</td></tr>
+<tr class=biostyle><td align=right ><strong>Excluded observations</strong>:</td> <td>1692</td></tr>
+<tr class=biostyle><td align=right><strong>Init log likelihood</strong>:	</td> <td>-9927.061</td></tr>
+<tr class=biostyle><td align=right><strong>Final log likelihood</strong>:	</td> <td>-7145.721</td></tr>
+<tr class=biostyle><td align=right><strong>Likelihood ratio test for the init. model</strong>:	</td> <td>5562.680</td></tr>
+<tr class=biostyle><td align=right><strong>Rho-square for the init. model</strong>:	</td> <td>0.280</td></tr>
+<tr class=biostyle><td align=right><strong>Rho-square-bar for the init. model</strong>:	</td> <td>0.279</td></tr>
+<tr class=biostyle><td align=right><strong>Akaike Information Criterion</strong>:	</td> <td>14311.442</td></tr>
+<tr class=biostyle><td align=right><strong>Bayesian Information Criterion</strong>:	</td> <td>14382.531</td></tr>
+<tr class=biostyle><td align=right><strong>Final gradient norm</strong>:	</td> <td>+5.368e-03</td></tr>
+<tr class=biostyle><td align=right><strong>Diagnostic</strong>:	</td> <td>Trust region algorithm with simple bounds (CGT2000): Convergence reached...</td></tr>
+<tr class=biostyle><td align=right><strong>Iterations</strong>:	</td> <td>10</td></tr>
+<tr class=biostyle><td align=right><strong>Data processing time</strong>:	</td> <td>00:00</td></tr>
+<tr class=biostyle><td align=right><strong>Run time</strong>:	</td> <td>00:03</td></tr>
+<tr class=biostyle><td align=right><strong>Nbr of threads</strong>:	</td> <td>2</td></tr>
+</table>
+<h2>Estimated parameters</h2>
+<p><font size='-1'>Click on the headers of the columns to sort the table  [<a href='http://www.kryogenix.org/code/browser/sorttable/' target='_blank'>Credits</a>]</font></p>
+<table border="1" class="sortable">
+<tr class=biostyle><th>Name </th><th>Value</th><th>Std err</th><th>t-test</th><th>p-value</th><th></th><th>Robust Std err</th><th>Robust t-test</th><th>p-value</th><th></th></tr>
+<!-- x[8]=ASC_SM (0,0.786175) [-10000,10000] FREE ID=10040--><tr class=biostyle>
+<td>ASC_SM</td><td>0.786</td><td>0.0693</td><td>11.35</td><td>0.00</td><td></td><td>0.0765</td><td>10.28</td><td>0.00</td><td></td></tr>
+<!-- x[4]=ASC_TRAIN (0,0.982647) [-10000,10000] FREE ID=10035--><tr class=biostyle>
+<td>ASC_TRAIN</td><td>0.983</td><td>0.131</td><td>7.48</td><td>0.00</td><td></td><td>0.148</td><td>6.63</td><td>0.00</td><td></td></tr>
+<!-- x[2]=BETA_CAR_CO (0,-0.00655969) [-10000,10000] FREE ID=10032--><tr class=biostyle>
+<td>BETA_CAR_CO</td><td>-0.00656</td><td>0.000789</td><td>-8.32</td><td>0.00</td><td></td><td>0.000975</td><td>-6.73</td><td>0.00</td><td></td></tr>
+<!-- x[1]=BETA_CAR_TT (0,-0.0104934) [-10000,10000] FREE ID=10031--><tr class=biostyle>
+<td>BETA_CAR_TT</td><td>-0.0105</td><td>0.000585</td><td>-17.95</td><td>0.00</td><td></td><td>0.000954</td><td>-11.00</td><td>0.00</td><td></td></tr>
+<!-- x[7]=BETA_HE (0,-0.00687686) [-10000,10000] FREE ID=10039--><tr class=biostyle>
+<td>BETA_HE</td><td>-0.00688</td><td>0.00103</td><td>-6.69</td><td>0.00</td><td></td><td>0.00105</td><td>-6.57</td><td>0.00</td><td></td></tr>
+<!-- x[3]=BETA_SENIOR (0,-1.05746) [-10000,10000] FREE ID=10033--><tr class=biostyle>
+<td>BETA_SENIOR</td><td>-1.06</td><td>0.116</td><td>-9.11</td><td>0.00</td><td></td><td>0.114</td><td>-9.30</td><td>0.00</td><td></td></tr>
+<!-- x[10]=BETA_SM_CO (0,-0.0080009) [-10000,10000] FREE ID=10042--><tr class=biostyle>
+<td>BETA_SM_CO</td><td>-0.00800</td><td>0.000376</td><td>-21.29</td><td>0.00</td><td></td><td>0.000521</td><td>-15.36</td><td>0.00</td><td></td></tr>
+<!-- x[9]=BETA_SM_TT (0,-0.0144307) [-10000,10000] FREE ID=10041--><tr class=biostyle>
+<td>BETA_SM_TT</td><td>-0.0144</td><td>0.000636</td><td>-22.68</td><td>0.00</td><td></td><td>0.00104</td><td>-13.88</td><td>0.00</td><td></td></tr>
+<!-- x[6]=BETA_TRAIN_CO (0,-0.0145576) [-10000,10000] FREE ID=10037--><tr class=biostyle>
+<td>BETA_TRAIN_CO</td><td>-0.0146</td><td>0.000965</td><td>-15.09</td><td>0.00</td><td></td><td>0.00163</td><td>-8.92</td><td>0.00</td><td></td></tr>
+<!-- x[5]=BETA_TRAIN_TT (0,-0.0179689) [-10000,10000] FREE ID=10036--><tr class=biostyle>
+<td>BETA_TRAIN_TT</td><td>-0.0180</td><td>0.000865</td><td>-20.78</td><td>0.00</td><td></td><td>0.00126</td><td>-14.28</td><td>0.00</td><td></td></tr>
+</table>
+<h2>Correlation of coefficients</h2>
+<p><font size='-1'>Click on the headers of the columns to sort the table [<a href='http://www.kryogenix.org/code/browser/sorttable/' target='_blank'>Credits</a>]</font></p>
+<table border="1" class="sortable">
+<tr class=biostyle><th>Coefficient1</th><th>Coefficient2</th><th>Covariance</th><th>Correlation</th><th>t-test</th><th>p-value</th><th></th><th>Rob. cov.</th><th>Rob. corr.</th><th>Rob. t-test</th><th>p-value</th><th></th></tr>
+<tr class=biostyle>
+<td>BETA_SM_TT</td><td>BETA_TRAIN_CO</td><td>2.22e-08</td><td>0.0361</td><td>0.11</td><td>0.91</td><td>*</td><td>5.59e-08</td><td>0.0329</td><td>0.07</td><td>0.95</td><td>*</td></tr><tr class=biostyle>
+<td>BETA_CAR_CO</td><td>BETA_HE</td><td>1.48e-08</td><td>0.0182</td><td>0.25</td><td>0.81</td><td>*</td><td>2.93e-08</td><td>0.0287</td><td>0.22</td><td>0.82</td><td>*</td></tr><tr class=biostyle>
+<td>BETA_HE</td><td>BETA_SM_CO</td><td>1.02e-09</td><td>0.00265</td><td>1.03</td><td>0.30</td><td>*</td><td>-4.44e-09</td><td>-0.00814</td><td>0.96</td><td>0.34</td><td>*</td></tr><tr class=biostyle>
+<td>BETA_TRAIN_CO</td><td>BETA_TRAIN_TT</td><td>-2.91e-07</td><td>-0.348</td><td>2.27</td><td>0.02</td><td></td><td>-1.11e-06</td><td>-0.538</td><td>1.34</td><td>0.18</td><td>*</td></tr><tr class=biostyle>
+<td>BETA_CAR_CO</td><td>BETA_SM_CO</td><td>6.82e-08</td><td>0.230</td><td>1.82</td><td>0.07</td><td>*</td><td>7.16e-08</td><td>0.141</td><td>1.39</td><td>0.17</td><td>*</td></tr><tr class=biostyle>
+<td>ASC_SM</td><td>ASC_TRAIN</td><td>0.00433</td><td>0.476</td><td>-1.70</td><td>0.09</td><td>*</td><td>0.00523</td><td>0.461</td><td>-1.49</td><td>0.14</td><td>*</td></tr><tr class=biostyle>
+<td>BETA_CAR_TT</td><td>BETA_TRAIN_CO</td><td>3.81e-08</td><td>0.0676</td><td>3.72</td><td>0.00</td><td></td><td>2.17e-07</td><td>0.139</td><td>2.29</td><td>0.02</td><td></td></tr><tr class=biostyle>
+<td>BETA_CAR_CO</td><td>BETA_CAR_TT</td><td>-2.28e-07</td><td>-0.494</td><td>3.30</td><td>0.00</td><td></td><td>-5.31e-07</td><td>-0.571</td><td>2.30</td><td>0.02</td><td></td></tr><tr class=biostyle>
+<td>BETA_CAR_TT</td><td>BETA_HE</td><td>-1.54e-09</td><td>-0.00256</td><td>-3.05</td><td>0.00</td><td></td><td>-2.17e-08</td><td>-0.0217</td><td>-2.53</td><td>0.01</td><td></td></tr><tr class=biostyle>
+<td>BETA_SM_TT</td><td>BETA_TRAIN_TT</td><td>1.82e-07</td><td>0.331</td><td>3.99</td><td>0.00</td><td></td><td>5.15e-07</td><td>0.394</td><td>2.77</td><td>0.01</td><td></td></tr><tr class=biostyle>
+<td>BETA_CAR_TT</td><td>BETA_SM_CO</td><td>5.32e-08</td><td>0.242</td><td>-4.06</td><td>0.00</td><td></td><td>2.00e-07</td><td>0.403</td><td>-2.82</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>BETA_CAR_TT</td><td>BETA_SM_TT</td><td>1.32e-07</td><td>0.356</td><td>5.67</td><td>0.00</td><td></td><td>4.78e-07</td><td>0.482</td><td>3.87</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>BETA_HE</td><td>BETA_TRAIN_CO</td><td>-1.27e-09</td><td>-0.00128</td><td>5.44</td><td>0.00</td><td></td><td>-1.65e-08</td><td>-0.00964</td><td>3.94</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>BETA_SM_CO</td><td>BETA_TRAIN_CO</td><td>1.05e-07</td><td>0.290</td><td>7.06</td><td>0.00</td><td></td><td>2.81e-07</td><td>0.330</td><td>4.25</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>BETA_CAR_CO</td><td>BETA_TRAIN_CO</td><td>6.01e-08</td><td>0.0790</td><td>6.68</td><td>0.00</td><td></td><td>8.66e-08</td><td>0.0544</td><td>4.31</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>BETA_HE</td><td>BETA_SM_TT</td><td>4.27e-09</td><td>0.00652</td><td>6.26</td><td>0.00</td><td></td><td>7.85e-09</td><td>0.00721</td><td>5.14</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>BETA_CAR_TT</td><td>BETA_TRAIN_TT</td><td>9.69e-08</td><td>0.192</td><td>7.90</td><td>0.00</td><td></td><td>2.89e-07</td><td>0.241</td><td>5.40</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>BETA_CAR_CO</td><td>BETA_SM_TT</td><td>8.42e-08</td><td>0.168</td><td>8.49</td><td>0.00</td><td></td><td>4.79e-08</td><td>0.0473</td><td>5.66</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>BETA_SM_CO</td><td>BETA_SM_TT</td><td>1.96e-08</td><td>0.0822</td><td>9.03</td><td>0.00</td><td></td><td>5.00e-08</td><td>0.0923</td><td>5.75</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>ASC_TRAIN</td><td>BETA_HE</td><td>-6.60e-05</td><td>-0.488</td><td>7.51</td><td>0.00</td><td></td><td>-7.33e-05</td><td>-0.472</td><td>6.66</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>ASC_TRAIN</td><td>BETA_CAR_CO</td><td>6.30e-06</td><td>0.0609</td><td>7.54</td><td>0.00</td><td></td><td>1.41e-07</td><td>0.000977</td><td>6.68</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>ASC_TRAIN</td><td>BETA_SM_CO</td><td>-2.82e-06</td><td>-0.0572</td><td>7.54</td><td>0.00</td><td></td><td>2.68e-06</td><td>0.0347</td><td>6.69</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>ASC_TRAIN</td><td>BETA_CAR_TT</td><td>6.86e-06</td><td>0.0893</td><td>7.57</td><td>0.00</td><td></td><td>1.26e-05</td><td>0.0888</td><td>6.71</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>ASC_TRAIN</td><td>BETA_TRAIN_TT</td><td>-6.77e-05</td><td>-0.596</td><td>7.59</td><td>0.00</td><td></td><td>-0.000115</td><td>-0.617</td><td>6.72</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>ASC_TRAIN</td><td>BETA_SM_TT</td><td>-7.91e-06</td><td>-0.0947</td><td>7.59</td><td>0.00</td><td></td><td>-2.09e-05</td><td>-0.136</td><td>6.72</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>ASC_TRAIN</td><td>BETA_TRAIN_CO</td><td>-9.98e-06</td><td>-0.0788</td><td>7.59</td><td>0.00</td><td></td><td>2.29e-05</td><td>0.0948</td><td>6.74</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>BETA_HE</td><td>BETA_TRAIN_TT</td><td>8.80e-09</td><td>0.00989</td><td>8.29</td><td>0.00</td><td></td><td>3.99e-08</td><td>0.0303</td><td>6.88</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>BETA_CAR_CO</td><td>BETA_TRAIN_TT</td><td>6.34e-08</td><td>0.0929</td><td>10.23</td><td>0.00</td><td></td><td>1.89e-08</td><td>0.0154</td><td>7.22</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>BETA_SM_CO</td><td>BETA_TRAIN_TT</td><td>3.42e-08</td><td>0.105</td><td>11.00</td><td>0.00</td><td></td><td>5.08e-08</td><td>0.0774</td><td>7.53</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>BETA_SENIOR</td><td>BETA_TRAIN_TT</td><td>3.46e-06</td><td>0.0344</td><td>-8.96</td><td>0.00</td><td></td><td>5.74e-06</td><td>0.0401</td><td>-9.15</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>BETA_SENIOR</td><td>BETA_SM_TT</td><td>-6.45e-07</td><td>-0.00873</td><td>-8.99</td><td>0.00</td><td></td><td>7.97e-07</td><td>0.00675</td><td>-9.18</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>BETA_SENIOR</td><td>BETA_TRAIN_CO</td><td>-1.88e-07</td><td>-0.00168</td><td>-8.99</td><td>0.00</td><td></td><td>7.77e-06</td><td>0.0419</td><td>-9.18</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>BETA_CAR_TT</td><td>BETA_SENIOR</td><td>-9.58e-08</td><td>-0.00141</td><td>9.02</td><td>0.00</td><td></td><td>-8.19e-07</td><td>-0.00756</td><td>9.21</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>BETA_SENIOR</td><td>BETA_SM_CO</td><td>-1.16e-07</td><td>-0.00267</td><td>-9.04</td><td>0.00</td><td></td><td>2.95e-07</td><td>0.00498</td><td>-9.23</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>BETA_HE</td><td>BETA_SENIOR</td><td>3.79e-06</td><td>0.0317</td><td>9.05</td><td>0.00</td><td></td><td>-2.39e-08</td><td>-0.000201</td><td>9.24</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>BETA_CAR_CO</td><td>BETA_SENIOR</td><td>-1.23e-07</td><td>-0.00134</td><td>9.05</td><td>0.00</td><td></td><td>1.57e-06</td><td>0.0142</td><td>9.25</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>ASC_SM</td><td>BETA_HE</td><td>-2.07e-05</td><td>-0.290</td><td>11.40</td><td>0.00</td><td></td><td>-2.28e-05</td><td>-0.285</td><td>10.33</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>ASC_SM</td><td>BETA_CAR_CO</td><td>8.58e-06</td><td>0.157</td><td>11.46</td><td>0.00</td><td></td><td>-4.73e-08</td><td>-0.000634</td><td>10.37</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>ASC_SM</td><td>BETA_SM_CO</td><td>-4.14e-06</td><td>-0.159</td><td>11.45</td><td>0.00</td><td></td><td>1.40e-06</td><td>0.0352</td><td>10.39</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>ASC_SM</td><td>BETA_SM_TT</td><td>-1.34e-05</td><td>-0.304</td><td>11.53</td><td>0.00</td><td></td><td>-3.27e-05</td><td>-0.412</td><td>10.41</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>ASC_SM</td><td>BETA_CAR_TT</td><td>9.26e-06</td><td>0.229</td><td>11.52</td><td>0.00</td><td></td><td>1.43e-05</td><td>0.196</td><td>10.45</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>ASC_SM</td><td>BETA_TRAIN_CO</td><td>-3.94e-06</td><td>-0.0589</td><td>11.55</td><td>0.00</td><td></td><td>3.96e-06</td><td>0.0317</td><td>10.48</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>ASC_SM</td><td>BETA_TRAIN_TT</td><td>-1.26e-06</td><td>-0.0210</td><td>11.60</td><td>0.00</td><td></td><td>-1.12e-05</td><td>-0.116</td><td>10.50</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>ASC_TRAIN</td><td>BETA_SENIOR</td><td>0.00108</td><td>0.0708</td><td>12.07</td><td>0.00</td><td></td><td>0.000513</td><td>0.0304</td><td>11.09</td><td>0.00</td><td></td></tr><tr class=biostyle>
+<td>ASC_SM</td><td>BETA_SENIOR</td><td>-2.15e-05</td><td>-0.00267</td><td>13.62</td><td>0.00</td><td></td><td>-0.000135</td><td>-0.0155</td><td>13.36</td><td>0.00</td><td></td></tr></table>
+<p>Smallest singular value: 53.2089</p>
