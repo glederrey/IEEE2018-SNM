@@ -1,6 +1,8 @@
 # SNM: Stochastic Newton Method for Optimization of Discrete Choice Models
 
-This repository contains all the code used to produce the figures and tables for the article **SNM: Stochastic Newton Method for Optimization of Discrete Choice Models**. This article has been sent for reviews at IEEE ITSC 2018. Feel free to use any part of the code at the condition that our article is explicitly  mentionned, see section [Authorization and Reference](#authorization-and-reference).
+This repository contains all the code used to produce the figures and tables for the article **SNM: Stochastic Newton Method for Optimization of Discrete Choice Models**. This article has been sent for reviews at IEEE ITSC 2018. Feel free to use any part of the code at the condition that our article is explicitly  mentionned, see section [Authorization and Reference](#authorization-and-reference). 
+
+**The article is available on this Github repository: [LedLurBie_IEEE2018.pdf](https://github.com/glederrey/IEEE2018_SNM/blob/master/paper/LedLurBie_IEEE2018.pdf).**
 
 If you have any questions about the code or the results, feel free to contact [Gael Lederrey](mailto:gael.lederrey@epfl.ch).
 
