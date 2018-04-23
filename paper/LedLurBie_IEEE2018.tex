@@ -260,23 +260,23 @@ In this section, we show why first-order moethods tend to struggle to optimize M
 \subsection{Raw data vs Normalized data}
 \label{sec:norm_unorm}
 
-Most of the data we can obtain are not normalized. This is often a preprocessing step required for some optimization algorithm to work. As explained in Section \ref{sec:model}, the optimization of the model leads to optimized parameters ranging over four orders of magnitude. Since the step size is the same for all parameters, it is difficult to find an optimal step size. Figure \ref{fig:sgd_norm_unorm} and \ref{fig:adagrad_norm_unorm} show the optimization process of the log-likelihood for SGD and Adagrad, respectively, for both the raw model $\mathcal{M}$ and the normalized model $\bar{\mathcal{M}}$. For both algorithms, the optimization was done a thousand times for two epochs with a batch size of 100 observations. The lines correspond to the average while the colored part corresponds to the 95\% confidence interval. The results show that these algorithms perform better on the normalized model $\bar{\mathcal{M}}$. Table \ref{tab:res_norm_unorm} show the average value of the log-likelihood after two epochs for these two algorithms on both models.
+Most of the data we can obtain are not normalized. This is often a preprocessing step required for some optimization algorithm to work. As explained in Section \ref{sec:model}, the optimization of the model leads to optimized parameters ranging over four orders of magnitude. Since the step size is the same for all parameters, it is difficult to find an optimal step size. Figure \ref{fig:sgd_norm_unorm} and \ref{fig:adagrad_norm_unorm} show the optimization process of the log-likelihood for SGD and Adagrad, respectively, for both the raw model $\mathcal{M}$ and the normalized model $\bar{\mathcal{M}}$. For both algorithms, the optimization was done ten times for ten epochs with a batch size of 100 observations. The lines correspond to the average while the colored part corresponds to the 95\% confidence interval. The results show that these algorithms perform better on the normalized model $\bar{\mathcal{M}}$. Table \ref{tab:res_norm_unorm} show the average value of the log-likelihood after two epochs for these two algorithms on both models.
 
 \begin{figure*}[t]
     \centering
     \subfigure[SGD]{
-        \includegraphics[width=0.3\textwidth]{../figures/SGD_norm_raw.pdf}
+        \includegraphics[width=0.3\textwidth]{../figures/SGD_norm_raw10.pdf}
         \label{fig:sgd_norm_unorm}
     }~
     \subfigure[Adagrad]{
-        \includegraphics[width=0.3\textwidth]{../figures/adagrad_norm_raw.pdf}
+        \includegraphics[width=0.3\textwidth]{../figures/adagrad_norm_raw10.pdf}
         \label{fig:adagrad_norm_unorm}
     }~
     \subfigure[SNM]{
-        \includegraphics[width=0.3\textwidth]{../figures/SNM_norm_raw.pdf}
+        \includegraphics[width=0.3\textwidth]{../figures/SNM_norm_raw10.pdf}
         \label{fig:snm_norm_unorm}
     }
-    \caption{Evaluation of the algorithms on raw data (model $\mathcal{M}$) and normalized data (model $\bar{\mathcal{M}}$). The vertical axis corresponds to the normalized log-likelihood presented in Equation (\ref{eq:norm_ll}). Each time, a thousand run have been executed. The lines correspond to the average value over all the runs and the colored part correspond to the 95\% confidence interval. SGD and Adagrad are run with a batch size of 100 observations, SNM is run with a batch size of 1,000 observations.}
+    \caption{Evaluation of the algorithms on raw data (model $\mathcal{M}$) and normalized data (model $\bar{\mathcal{M}}$). The vertical axis corresponds to the normalized log-likelihood presented in Equation (\ref{eq:norm_ll}). Each time, ten runs have been executed. The lines correspond to the average value over all the runs and the colored part correspond to the 95\% confidence interval. SGD and Adagrad are run with a batch size of 100 observations, SNM is run with a batch size of 1,000 observations.}
     \label{fig:norm_unorm}
     \vspace{-0.5cm}
 \end{figure*}
@@ -300,23 +300,23 @@ Figure \ref{fig:snm_norm_unorm} shows the results of the training on both models
 \subsection{Comparison of the algorithms}
 \label{sec:comp_algo}
 
-In this section, we want to compare the three main categories of algorithms: first-order methods, quasi-newton methods, and second-order methods. Figure \ref{fig:first_order} shows the results for SGD with batch size of 100 and 1,000 as well as gradient descent. Figure \ref{fig:quasi_newton} shows the results for RES-BFGS with batch sizes of 100 and 1,000 as well as standard BFGS. Finally,  Figure Figure \ref{fig:second_order} shows the results for SNM with batch sizes of 100 and 1,000 as well as Newton method. For these three figures, we executed a thousand runs. The lines give the average value for the normalized log-likelihood, and the colored parts show the 95\% confidence interval.\\
+In this section, we want to compare the three main categories of algorithms: first-order methods, quasi-newton methods, and second-order methods. Figure \ref{fig:first_order} shows the results for SGD with batch size of 100 and 1,000 as well as gradient descent. Figure \ref{fig:quasi_newton} shows the results for RES-BFGS with batch sizes of 100 and 1,000 as well as standard BFGS. Finally,  Figure Figure \ref{fig:second_order} shows the results for SNM with batch sizes of 100 and 1,000 as well as Newton method. For these three figures, we executed ten runs. The lines give the average value for the normalized log-likelihood, and the colored parts show the 95\% confidence interval.\\
 
 \begin{figure*}[t]
     \centering
     \subfigure[First-order methods]{
-        \includegraphics[width=0.3\textwidth]{../figures/SGD.pdf}
+        \includegraphics[width=0.3\textwidth]{../figures/SGD10.pdf}
         \label{fig:first_order}
     }~
     \subfigure[Quasi-Newton methods]{
-        \includegraphics[width=0.3\textwidth]{../figures/SBFGS.pdf}
+        \includegraphics[width=0.3\textwidth]{../figures/SBFGS10.pdf}
         \label{fig:quasi_newton}
     }~
     \subfigure[Second-order methods]{
-        \includegraphics[width=0.3\textwidth]{../figures/SNM.pdf}
+        \includegraphics[width=0.3\textwidth]{../figures/SNM10.pdf}
         \label{fig:second_order}
     }
-    \caption{Comparison of the different algorithms presented in Section \ref{sec:algorithms} and \ref{sec:snm}. The vertical axis corresponds to the normalized log-likelihood presented in Equation (\ref{eq:norm_ll}). Each time, a thousand run have been executed. The lines correspond to the average value over all the runs and the colored part correspond to the 95\% confidence interval.}
+    \caption{Comparison of the different algorithms presented in Section \ref{sec:algorithms} and \ref{sec:snm}. The vertical axis corresponds to the normalized log-likelihood presented in Equation (\ref{eq:norm_ll}). Each time, a ten runs have been executed. The lines correspond to the average value over all the runs and the colored part correspond to the 95\% confidence interval.}
     \label{fig:comparison_algo}
     \vspace{-0.5cm}
 \end{figure*}
