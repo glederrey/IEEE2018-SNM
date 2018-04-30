@@ -163,14 +163,14 @@ def line_search_mini_batch_SNM(model, x0, nbr_epochs, batch_size, verbose=False)
         if verbose:
             print("Gradient norm: {:.2E}".format(np.linalg.norm(grad)))
 
-        try:
-            inv_hess = np.linalg.inv(hess)
+        if np.all(np.linalg.eigvals(hess) < 0):
+
             if verbose:
                 print("Newton step, ll = {:.5f}".format(ll))
-            step = -np.dot(grad, inv_hess)
+            step = np.linalg.solve(hess, -grad)
             nbr_newton += 1
 
-        except np.linalg.LinAlgError:
+        else:
             if verbose:
                 print("Gradient Descent step, ll = {:.5f}".format(ll))
             step = grad
@@ -256,6 +256,7 @@ def bfgs(model, x0, nbr_epochs, start=None, verbose=False):
     xs.append(x)
 
     return epochs, xs, lls
+
 
 def res_bfgs(model, x0, nbr_epochs, batch_size, Gamma=None, delta=None, verbose=False):
 
