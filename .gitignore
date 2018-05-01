@@ -334,3 +334,6 @@ TSWLatexianTemp*
 
 # standalone packages
 *.sta
+
+# Remove the revisions of the paper
+paper/revisions/
