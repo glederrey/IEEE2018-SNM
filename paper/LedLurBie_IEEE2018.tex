@@ -1,3 +1,4 @@
+\pdfminorversion=4  
 \documentclass[conference]{IEEEtran}
 \IEEEoverridecommandlockouts
 % The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
@@ -109,7 +110,7 @@ The estimation of the $\beta$ parameters amounts to solve the following optimiza
 \end{equation} 
 The structure of the objective function, in Equation (\ref{eq:ll}), as a sum over entries in the database suggests the use of a stochastic approach.
 
-We now present our algorithm named Stochastic Newton Method (SNM)\footnote{The code is on GitHub: \href{https://github.com/glederrey/IEEE2018\_SNM}{https://github.com/glederrey/IEEE2018\_SNM}}. The input parameters are the following:
+We now present our algorithm named Stochastic Newton Method (SNM)\footnote{The code is available on GitHub: \href{https://github.com/glederrey/IEEE2018-SNM}{https://github.com/glederrey/IEEE2018-SNM}}. The input parameters are the following:
 \begin{itemize}
 \item $\beta_0$: Initial parameters. They are used to start the optimization process.
 \item $\mathcal{D}$: Data. For the Python implementation, we use a \texttt{pandas.DataFrame}.
@@ -211,15 +212,13 @@ We use several algorithms to train models $\mathcal{M}$ and $\bar{\mathcal{M}}$.
 \section{Results}
 \label{sec:res}
 
-In this section, we show the results achieved by our algorithm, together with different benchmark algorithms. We also highlight a current main weakness of our SNM and a future way to fix it.
-
 \subsection{Raw data vs Normalized data}
 \label{sec:norm_unorm}
 
 First, we want to investigate the effect of the ill-conditioned problems on SNM and other benchmark algorithms. Indeed, it is well known that first-order methods tend to suffer from ill-conditioned problems while second-order methods, with the information on the curvature from the Hessian, can better deal with it. Figure \ref{fig:sgd_norm_unorm} and \ref{fig:adagrad_norm_unorm} show the optimization process of the log likelihood for SGD and Adagrad, respectively, for the raw model $\mathcal{M}$ and the normalized model $\bar{\mathcal{M}}$. For both algorithms, the optimization was done ten times for ten epochs with a batch size of 100 observations. The lines correspond to the average while the colored part corresponds to the 95\% confidence interval. The results show that these algorithms perform better on the normalized model $\bar{\mathcal{M}}$. Table \ref{tab:res_norm_unorm} shows the average value of the log likelihood after two epochs for these two algorithms on both models.
 
 \begin{figure*}[t]
-\vspace{-0.5cm}
+\vspace{-0.4cm}
     \centering
     \subfigure[SGD]{
         \includegraphics[width=0.3\textwidth]{../figures/SGD_norm_raw10.pdf}
@@ -261,7 +260,6 @@ rel. diff. & 1.33\% & 1.50\% & 0.00\%
 \end{table}
 
 \begin{figure*}[t]
-\vspace{-1cm}
     \centering
     \subfigure[First-order methods]{
         \includegraphics[width=0.3\textwidth]{../figures/SGD10.pdf}
@@ -278,7 +276,7 @@ rel. diff. & 1.33\% & 1.50\% & 0.00\%
     \vspace{-0.2cm}
     \caption{Comparison of the different algorithms presented in Section \ref{sec:algorithms} and \ref{sec:snm}. The vertical axis corresponds to the normalized log likelihood. Each time, ten runs have been executed. The lines correspond to the average value over all the runs, and the colored part corresponds to the 95\% confidence interval.}
     \label{fig:comparison_algo}
-    \vspace{-0.5cm}
+    \vspace{-0.3cm}
 \end{figure*}
 
 \begin{table}
@@ -291,7 +289,7 @@ rel. diff. & 1.33\% & 1.50\% & 0.00\%
 \multicolumn{2}{l|}{\bf Full batch size}  & -0.821341 & -0.845372/-0.790806 & -0.790806
 \end{tabular}
 \caption{\label{tab:comparison_algo} Average normalized log likelihood over a thousand runs at the tenth epoch for first-order methods, quasi-newton methods, and second-order methods.}
-\vspace{-1cm}
+\vspace{-0.8cm}
 \end{table}
 
 From Figure~\ref{fig:comparison_algo}, we see that first-order methods struggle the most in the early epochs. Then, we see that stochastic quasi-newton methods tend to struggle to reach the optimal value, especially with the first approximation of the Hessian being the identity matrix. Interestingly, we see that the RES-BFGS works better with smaller batch size while it tends to struggle and plateau with big batch size. Nevertheless, it can get closer to the optimal solution than SGD. However, SNM is the best algorithm out of the three regarding the log likelihood at the tenth epoch. Table \ref{tab:comparison_algo} gives the average value of the normalized log likelihood for the tenth epoch. In this table, we report two values for the quasi-newton method and the full batch size: the first value reported is with the first approximation of the Hessian being the identity matrix, the second value corresponds to the real Hessian. The numbers confirm that SNM is the best algorithm. However, it is interesting to note that contrary to the other two algorithms, SNM runs better with bigger batch size. In the next section, see Section~\ref{sec:effect_bs}, we study the possible reason behind such behavior.
@@ -310,7 +308,7 @@ As shown in Table~\ref{tab:comparison_algo}, for both SGD and SNM a more signifi
 \vspace{-0.3cm}
 \end{figure}
 
-As we can see, SNM tends to perform only Newton steps quickly. Indeed, with a batch of 100 observations, the algorithm performs a Newton step 99.86\% of the time. Therefore, the difference in the percentage of Newton steps between batches of 100 observations and batches of 1,000 observations is minimal. It leads to the conclusion that the issue aforementioned does not come from the switching between the two types of steps.
+As we can see, SNM tends to perform only Newton steps quickly. Indeed, with a batch of 100 observations, the algorithm performs a Newton step 99.9\% of the time. Therefore, the difference in the percentage of Newton steps between batches of 100 observations and batches of 1,000 observations is minimal. It leads to the conclusion that the issue aforementioned does not come from the switching between the two types of steps.
 
 However, small batch sizes create other issues for all sorts of stochastic algorithms. Indeed, when computing the Hessian with small batch size, the only information we get is from a small subset of data. Therefore, for a given batch, the optimum can be different from the optimum on the whole dataset. Using the well optimized function \texttt{minimize} from the package \texttt{scipy.optimize}, we compute the optimum for different batch size. Then, we compare the euclidian distance between the optimum on the full dataset and the optimum from the different batches. Figure \ref{fig:batch_dist} shows the results of this experiment.
 
