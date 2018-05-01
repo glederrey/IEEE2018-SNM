@@ -23,4 +23,4 @@ We present now the content of all the iPython notebooks:
 In addition, Table I was generated from the biogeme code in the folder [`code/biogeme`](https://github.com/glederrey/IEEE2018_SNM/tree/master/code/biogeme).
 
 ## Authorization and Reference
-> *We authorize the use of any part of the code at the condition that our article is explicitly mentioned using the following reference:* **Gael Lederrey, Virginie Lurking and Michel Bierlaire (2018). SNM: Stochastic Newton Method for Optimization of Discrete Choice Models. In *Proceedings of IEEE ITSC 2018.***
+> *We authorize the use of any part of the code at the condition that our article is explicitly mentioned using the following reference:* **Gael Lederrey, Virginie Lurking and Michel Bierlaire. SNM: Stochastic Newton Method for Optimization of Discrete Choice Models. In *Proceedings of IEEE ITSC 2018.***
