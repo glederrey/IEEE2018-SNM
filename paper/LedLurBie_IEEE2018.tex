@@ -33,11 +33,10 @@
 \renewcommand{\citedash}{--} 
     
 \begin{document}
-
-\title{SNM: Stochastic Newton Method for Optimization of Discrete Choice Models}
+\title{\vspace{0.6cm}
+SNM: Stochastic Newton Methodfor Optimization of Discrete Choice Models}
 
 \author{
-
 \IEEEauthorblockN{Gael Lederrey}
 \IEEEauthorblockA{\small \textit{Transport and Mobility Laboratory} \\
 \textit{\'Ecole Polytechnique F\'ed\'erale de Lausanne}\\
@@ -60,6 +59,7 @@ Station 18, CH-1015 Lausanne \\
 \maketitle
 
 \begin{abstract}
+
 Optimization algorithms are rarely mentioned in the discrete choice literature. One reason may be that classic Newton-Raphson methods have been rather successful in estimating discrete choice parameters on available data sets of limited size. However, thanks to recent advances in data collection, abundant data about choice situations become more and more available, and state-of-the-art algorithms can be computationally burdensome on these massive datasets.  In this paper, inspired by the good practices from the machine learning field, we introduce a Stochastic Newton Method (SNM) for the estimation of discrete choice models parameters. Our preliminary results indicate that our method outperforms (stochastic) first-order and quasi-newton methods. 
 \end{abstract}
 
@@ -130,12 +130,12 @@ After the initialization of the output parameters, we can start the \texttt{for}
 \[
 \nabla^2 f(\beta) \cdot p = - \nabla f(\beta)
 \]
-Where $p$ is the step direction we are looking for, $\nabla f$ is the gradient of the function $f$, and $\nabla^2 f$ is the Hessian of the same function $f$. If the Hessian is not negative definite, meaning that one of its eigenvalues is either 0 or positive, we cannot perform a Newton step. Thus, we can simply do a gradient step. In this case, the direction is given by the gradient itself. The next important step is to find a good step size, see line 15. We do this using a backtracking Line Search method using the Armijo-Goldstein condition~\cite{armijo_minimization_1966}. The algorithm starts with $\alpha>0$ being the maximum candidate step size. In addition, we use two search control parameters $\tau\in(0,1)$ and $c\in(0,1)$. In our case, $\alpha=1$ and $\tau=c=0.5$. Then, we can set $t = -c\cdot p^T\nabla f(\beta)$. The core loop goes as follows: until the condition $f(\beta) - f(\beta + \alpha p) \geq \alpha t$ is satisfied, set $\alpha = \tau \cdot \alpha$. Once the condition is reached, we can simply return $\alpha$. In our implementation, we also added a stopping criterion to avoid being caught in an infinite loop. Indeed, we stop the backtracking line search if $\alpha < 10^{-8}$. Such a line search method is helpful to do the biggest possible step. However, it does not help when the problem is ill-conditioned. Indeed, if one of the parameters requires a tiny step size to perform a correct iteration (the next objective function value is smaller/greater than the previous one), the backtracking line search will reduce the step size significantly. Therefore, the parameters requiring a large step size, because they have a large optimized value, will not be properly optimized. However, the direction step itself can have different values for the parameters. Thus, a good step can help with ill-conditioned problems.
+Where $p$ is the step direction we are looking for, $\nabla f$ is the gradient of the function $f$, and $\nabla^2 f$ is the Hessian of the same function $f$. If the Hessian is not negative definite, meaning that one of its eigenvalues is either 0 or positive, we cannot perform a Newton step. Thus, we can simply do a gradient step. In this case, the direction is given by the gradient itself. The next important step is to find a good step size, see line 15. We do this using a backtracking Line Search method using the Armijo-Goldstein condition~\cite{armijo_minimization_1966}. The algorithm starts with $\alpha>0$ being the maximum candidate step size. In addition, we use two search control parameters $\tau\in(0,1)$ and $c\in(0,1)$. In our case, we arbitrarly set $\alpha=1$ and $\tau=c=0.5$. Then, we can set $t = -c\cdot p^T\nabla f(\beta)$. The core loop goes as follows: until the condition $f(\beta) - f(\beta + \alpha p) \geq \alpha t$ is satisfied, set $\alpha = \tau \cdot \alpha$. Once the condition is reached, we can simply return $\alpha$. In our implementation, we also added a stopping criterion to avoid being caught in an infinite loop. Indeed, we stop the backtracking line search if $\alpha < 10^{-8}$. Such a line search method is helpful to do the biggest possible step. However, it does not help when the problem is ill-conditioned. Indeed, if one of the parameters requires a tiny step size to perform a correct iteration (the next objective function value is smaller/greater than the previous one), the backtracking line search will reduce the step size significantly. Therefore, the parameters requiring a large step size, because they have a large optimized value, will not be properly optimized. However, the direction step itself can have different values for the parameters. Thus, a good step can help with ill-conditioned problems.
 
 \begin{algorithm*}[t]
 \caption{Stochastic Newton Method (SNM)}\label{algo:snm}
 \begin{algorithmic}[1]
-\Require{Starting parameter value ($\beta_0$), data ($\mathcal{D}$), function ($f$), gradient ($\nabla f$), Hessian ($\nabla^2 f$), number of epochs ($N_{ep}$), batch size ($N_{batch}$)}
+\Require{Initial parameter value ($\beta_0$), data ($\mathcal{D}$), function ($f$), gradient ($\nabla f$), Hessian ($\nabla^2 f$), \#epochs ($N_{ep}$), batch size ($N_{batch}$)}
 \Ensure{Epochs ($E$), parameters ($\beta$), function values ($f_v$)}
 \Function{SNM}{}
 \State $(N_{\mathcal{D}}, M) = |\mathcal{D}|$ \Comment{Number of samples and parameters}
@@ -166,7 +166,7 @@ Where $p$ is the step direction we are looking for, $\nabla f$ is the gradient o
 \section{Case Study}
 \label{sec:case_study}
 
-We use the {\it Swissmetro} dataset~\cite{bierlaire_acceptance_2001} and build a logit model denoted by $\mathcal{M}$:
+We use the {\it Swissmetro} dataset~\cite{bierlaire_acceptance_2001}. This dataset is an SP survey about the use of an extra public transportation system in Switzerland. We then build a simple logit model denoted by $\mathcal{M}$:
 \begin{align}
 \label{eq:model}
 V_{\text{Car}} &= \text{ASC}_{\text{Car}} + \beta_{\text{TT,Car}} \text{TT}_{\text{Car}} + \beta_{\text{C,Car}} \text{C}_{\text{Car}} + \beta_{\text{Senior}}\mathbb{1}_{\text{Senior}} \nonumber \\
@@ -176,12 +176,12 @@ V_{\text{SM}} &= \text{ASC}_{\text{SM}} + \beta_{\text{TT,SM}} \text{TT}_{\text{
 \end{split} \\
 V_{\text{Train}} &= \text{ASC}_{\text{Train}} + \beta_{\text{TT,Train}} \text{TT}_{\text{Train}} + \beta_{\text{C,Train}} \text{C}_{\text{Train}} + \beta_{\text{HE}} \text{HE}_{\text{Train}} \nonumber
 \end{align}
-where $\mathbb{1}_{\text{Senior}}$ is a feature equal to one if the age of the respondent is over 65 years olds, 0 otherwise, $C$ denotes the cost, $TT$ the travel time, and $HE$ the headway for the train and Swissmetro. For this model, we removed all observations with unknown choice, unkown age and non-positive travel time. This gives a total of 9,036 observations.
+where $\mathbb{1}_{\text{Senior}}$ is a feature equal to one if the age of the respondent is over 65 years olds, 0 otherwise, $C$ denotes the cost, $TT$ the travel time, and $HE$ the headway for the train and Swissmetro. For this model, we removed all observations with unknown choice, unkown age and non-positive travel time. This gives a total of 9,036 observations. 
  
 We first estimate the model with Biogeme~\cite{bierlaire_biogeme:_2003} to obtain the optimal parameter values and verify that all parameters are significant. However, we do not use the usual log likelihood. Instead, we are using a normalized log likelihood which corresponds to the log likelihood divided by the number of observations. Therefore, the final normalized log likelihood is $-0.7908$. The optimized parameters are given in Table \ref{tab:res_biogeme}.
 
 \begin{table}
-\vspace{-0.5cm}
+%\vspace{-0.5cm}
 \centering
 \renewcommand\arraystretch{1.2}
 \begin{tabular}{l|cccc}
@@ -301,7 +301,7 @@ As shown in Table~\ref{tab:comparison_algo}, for both SGD and SNM a more signifi
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.37\textwidth]{../figures/perc_newton.pdf}
+\includegraphics[width=0.35\textwidth]{../figures/perc_newton.pdf}
 \vspace{-0.3cm}
 \caption{Theoretical percentage of Newton step in function of the batch size for model $\bar{\mathcal{M}}$. The percentage was computed on a thousand draws.}
 \label{fig:perc_newton}
@@ -314,7 +314,7 @@ However, small batch sizes create other issues for all sorts of stochastic algor
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.37\textwidth]{../figures/dist.pdf}
+\includegraphics[width=0.35\textwidth]{../figures/dist.pdf}
 \vspace{-0.3cm}
 \caption{Euclidian distance between the optimal parameters obtained on the full dataset and optimal parameters found on batches of the data for different batch sizes. The line in the middle represents the median. A thousand draws were computed for each batch size.}
 \label{fig:batch_dist}
